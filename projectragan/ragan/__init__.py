@@ -40,6 +40,8 @@ def main():
     r_logits, r_rep = discriminator(X)
     f_logits, g_rep = discriminator(G_sample, reuse=True)
 
+
+    # Loss functions
     disc_loss = tf.reduce_mean(
         tf.nn.sigmoid_cross_entropy_with_logits(
             logits=r_logits, labels=tf.ones_like(r_logits)) + 
@@ -52,6 +54,17 @@ def main():
         tf.nn.sigmoid_cross_entropy_with_logits(
             logits=f_logits, labels=tf.ones_like(f_logits)))
 
-    print(gen_loss)    
+    #print(gen_loss)    
+    # Optimizers
+    gen_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES,
+        scope="GAN/Generator")
+    disc_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES,
+        scope="GAN/Discriminator")
+
+    gen_step = tf.train.RMSPropOptimizer(learning_rate=0.001).minimize(gen_loss, 
+        var_list=gen_vars) # G train step
+    disc_step = tf.train.RMSPropOptimizer(learning_rate=0.001).minimize(disc_loss, 
+        var_list=disc_vars) # G train step
+
 
 main();
