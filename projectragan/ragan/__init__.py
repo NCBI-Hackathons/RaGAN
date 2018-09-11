@@ -40,5 +40,18 @@ def main():
     r_logits, r_rep = discriminator(X)
     f_logits, g_rep = discriminator(G_sample, reuse=True)
 
-    
+    disc_loss = tf.reduce_mean(
+        tf.nn.sigmoid_cross_entropy_with_logits(
+            logits=r_logits, labels=tf.ones_like(r_logits)) + 
+        tf.nn.sigmoid_cross_entropy_with_logits(
+            logits=f_logits, labels=tf.zeros_like(f_logits))) 
+
+    #print(disc_loss)    
+
+    gen_loss = tf.reduce_mean(
+        tf.nn.sigmoid_cross_entropy_with_logits(
+            logits=f_logits, labels=tf.ones_like(f_logits)))
+
+    print(gen_loss)    
+
 main();
