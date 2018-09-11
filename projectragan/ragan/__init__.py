@@ -2,6 +2,9 @@ import tensorflow as tf
 import numpy as np
 
 
+def sample_Z(m,n):
+    return np.random.uniform(-1., 1., size=[m,n])
+
 def get_y(x):
     return 10 + x*x;
 
@@ -65,6 +68,35 @@ def main():
         var_list=gen_vars) # G train step
     disc_step = tf.train.RMSPropOptimizer(learning_rate=0.001).minimize(disc_loss, 
         var_list=disc_vars) # G train step
+
+
+    #Session
+    sess = tf.Session()
+    tf.global_variables_initializer().run(session=sess)
+
+    # Training the network
+    batch_size=256
+    nd_steps = 10
+    ng_steps = 10
+    for i in range(10001):
+        X_batch = sample_data(n=batch_size);
+        Z_batch = sample_Z(batch_size, 2);
+
+        for _ in range(nd_steps):
+            _ ,dloss = sess.run([disc_step, disc_loss], 
+                feed_dict={X:X_batch, Z:Z_batch})
+
+        rrep_gstep, grep_step  = sess.run([r_rep, g_rep], 
+            feed_dict={X:X_batch, Z:Z_batch})
+
+        for _ in range(ng_steps):
+            _ ,gloss = sess.run([gen_step, gen_loss], 
+                feed_dict={Z:Z_batch})
+
+        rrep_gstep, grep_step  = sess.run([r_rep, g_rep], 
+            feed_dict={X:X_batch, Z:Z_batch})
+
+        print("Iteration: %d\t Discriminator loss: %.4f\t Generator loss: %.4f"%(i, dloss, gloss))
 
 
 main();
