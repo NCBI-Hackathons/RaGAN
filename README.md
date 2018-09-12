@@ -12,7 +12,7 @@ The following diagram shows the basic concept of GAN network. In the picture, th
 
 
 ![Basic Concept of GAN:](https://mlnotebook.github.io/img/CNN/gan1.png)
-[source](https://mlnotebook.github.io/img/CNN/gan1.png)
+[image source](https://mlnotebook.github.io/img/CNN/gan1.png)
 
 ### Current Challenges
 
