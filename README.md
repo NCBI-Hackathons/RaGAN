@@ -35,7 +35,7 @@ GAN network architecture, figures, etc.
 1. Python ‘regan’ library
 TBD
 
-2. Docker
+2. Docker <br>
 We use a tool called Docker, which can package all our works including code and enviroment in one docker image.
 Thanks to Containerization, you can use our tools without many setup steps. Just follow the instruction below :
 ```
