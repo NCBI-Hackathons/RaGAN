@@ -16,7 +16,7 @@ The following diagram shows the basic concept of GAN network. In the picture, th
 
 ### Current Challenges
 
-Training a CNN for Deep Learning typically requires a large amount of labeled training image data, which remains a challenge in the biomedical domain because of the expense of expert annotation. Although researchers have reported successful training of Generative Adversarial Network (GAN) models to generate synthetic images as a potential solution to solve the training set bottleneck, training CNNs and GANs in a timely manner could require demanding programming experience and skill sets from domain experts. Our aim is to provide end users a streamlined workflow to facilitate rapid utilization of CNNs (GAN) to produce synthetic training data.
+Training a CNN for Deep Learning typically requires a large amount of labeled training image data, which remains a challenge in the biomedical domain because of the expense of expert annotation. Although researchers have reported successful training of Generative Adversarial Network (GAN) models to generate synthetic images as a potential solution to solve the training set bottleneck, training CNNs and GANs in a timely manner could require demanding programming experience and skill sets from domain experts. Our aim is to provide end users a streamlined workflow to facilitate rapid utilization of GAN networks to produce synthetic radiology images for DL training.
 
 ### Methods
 
