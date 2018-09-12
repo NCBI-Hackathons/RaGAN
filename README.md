@@ -35,6 +35,15 @@ GAN network architecture, figures, etc.
 1. Python ‘regan’ library
 
 2. Docker version 
+We use a tool called Docker, which package all our work including code and enviroment in one docker image.
+Thanks to Containerization, you can use our tools without many setup steps. Just follow the instruction below :
+1. docker pull johnbamboobilly/ragan
+https://hub.docker.com/r/johnbamboobilly/ragan/
+our repository on dockerhub
+2. docker image ls
+check the IMAGE ID in the list, and copy it
+3. docker run <IMAGE ID>
+replace <IMAGE ID> with the id you saw on the list
 
 #### Instructions
 
