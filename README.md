@@ -75,10 +75,20 @@ replace <IMAGE ID> with the id you saw on the list
 
 * Instructions to use the docker version (the python library warped in the docker container for easier usage, for example, the container has all necessary libraries so users don’t have to setup environments on their own computers (they only need a GPU and video card driver)
 
+#### Use cases:
+
+<img src="mnist_2500.png" width="400" height="400" />
+Data source: CXR8
+
 #### Long Term Goals:
 
+* Explore alternatives network architectures for performance enhancement
+* 3D capacity
+* Build more use cases
 
-This repository reflects our efforts at the NCBI Hackathon (Bethesda, MD) 10-12 Sep, 2018. 
+This repository reflects our efforts at the NCBI Hackathon (Bethesda, MD) Sept 10-12, 2018. 
+
+
 ##### Team members:
 * Xinlian Liu, FNLCR
 * Yanling Liu, FNLCR
