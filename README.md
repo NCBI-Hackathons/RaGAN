@@ -33,7 +33,25 @@ Finally we containerized the workflow such that users are freed from tedious sof
 GAN network architecture, figures, etc.
 
 1. Python ‘regan’ library
-TBD
+We implemented a cookiecutter-template based development pipeline for the project. Users can download the project from github and use the following command 
+```
+python setup.py build
+python setup.py install
+```
+
+The library will be installed in the "site-packages" directory of the python installation.
+To use the library, users must just use 
+
+```
+import ragan
+```
+in their python script.
+
+We are also making it conda installable project. To install the project, users will have to just use
+```
+conda install ragan -c ragan
+```
+to install the project. 
 
 2. Docker <br>
 We use a tool called Docker, which can package all our works including code and enviroment in one docker image.
