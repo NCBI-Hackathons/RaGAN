@@ -1,5 +1,7 @@
 import tensorflow as tf
+import os
 import numpy as np
+from scipy.ndimage import imread
 
 
 def sample_Z(m,n):
@@ -10,13 +12,10 @@ def get_y(x):
 
 def sample_data(n=10000, scale=100):
     data = []
-
     x = scale*(np.random.random_sample((n,))-0.5)
-
     for i in range(n):
         yi = get_y(x[i])
         data.append([x[i], yi])
-
     return np.array(data)
 
 def generator(Z, hsize=[16,16]):
@@ -34,15 +33,30 @@ def discriminator(X, hsize=[16,16], reuse=False):
         out = tf.layers.dense(h3,1)
     return out, h3
 
+def load_data(directory_path):
+    print(len(os.listdir(directory_path)))
+    train_data = []
+    for file_ in sorted(os.listdir(directory_path)):
+        if file_.endswith('.png'):
+            if directory_path.endswith('/'):
+                 image_path = directory_path + file_
+            else: image_path = directory_path + '/' + file_
+
+            image = imread(image_path)/255.0 # Normalize values
+            image = np.expand_dims(image, axis=-1) # Add channel dim
+            train_data.append(image)
+    train_data = np.array(train_data)
+    return train_data
+
 def main():
     print("Hello World from RaGAN")
-    a = sample_data()
+
     X = tf.placeholder(tf.float32, [None,2])
     Z = tf.placeholder(tf.float32, [None,2])
+
     G_sample = generator(Z )
     r_logits, r_rep = discriminator(X)
     f_logits, g_rep = discriminator(G_sample, reuse=True)
-
 
     # Loss functions
     disc_loss = tf.reduce_mean(
@@ -51,13 +65,10 @@ def main():
         tf.nn.sigmoid_cross_entropy_with_logits(
             logits=f_logits, labels=tf.zeros_like(f_logits))) 
 
-    #print(disc_loss)    
-
     gen_loss = tf.reduce_mean(
         tf.nn.sigmoid_cross_entropy_with_logits(
             logits=f_logits, labels=tf.ones_like(f_logits)))
 
-    #print(gen_loss)    
     # Optimizers
     gen_vars = tf.get_collection(tf.GraphKeys.GLOBAL_VARIABLES,
         scope="GAN/Generator")
@@ -69,7 +80,6 @@ def main():
     disc_step = tf.train.RMSPropOptimizer(learning_rate=0.001).minimize(disc_loss, 
         var_list=disc_vars) # G train step
 
-
     #Session
     sess = tf.Session()
     tf.global_variables_initializer().run(session=sess)
@@ -79,8 +89,13 @@ def main():
     nd_steps = 10
     ng_steps = 10
     for i in range(10001):
-        X_batch = sample_data(n=batch_size);
-        Z_batch = sample_Z(batch_size, 2);
+        # Reading the data
+        #X_batch = sample_data(n=batch_size);
+        #Z_batch = sample_Z(batch_size, 2);
+        X_batch = load_data("data/simages28/Hernia"); 
+        print("shape of X_batch : ", X_batch.shape)
+        print(np.size(X_batch))
+        exit();
 
         for _ in range(nd_steps):
             _ ,dloss = sess.run([disc_step, disc_loss], 
