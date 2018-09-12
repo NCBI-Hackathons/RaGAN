@@ -1,4 +1,4 @@
-# RaGAN
+# RaGAN: Radiology GAN
 
 ## Machine Learning based production of training images to use in image analysis workflow
 
