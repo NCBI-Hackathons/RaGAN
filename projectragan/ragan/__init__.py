@@ -101,14 +101,14 @@ def main():
             _ ,dloss = sess.run([disc_step, disc_loss], 
                 feed_dict={X:X_batch, Z:Z_batch})
 
-        rrep_gstep, grep_step  = sess.run([r_rep, g_rep], 
+        rrep_dstep, grep_dstep  = sess.run([r_rep, g_rep], 
             feed_dict={X:X_batch, Z:Z_batch})
 
         for _ in range(ng_steps):
             _ ,gloss = sess.run([gen_step, gen_loss], 
                 feed_dict={Z:Z_batch})
 
-        rrep_gstep, grep_step  = sess.run([r_rep, g_rep], 
+        rrep_gstep, grep_gstep  = sess.run([r_rep, g_rep], 
             feed_dict={X:X_batch, Z:Z_batch})
 
         print("Iteration: %d\t Discriminator loss: %.4f\t Generator loss: %.4f"%(i, dloss, gloss))
