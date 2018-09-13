@@ -54,6 +54,8 @@ conda install ragan -c ragan
 to install the project. 
 
 2. Docker <br>
+TBD , Chun-Hung
+<br>
 We use a tool called Docker, which can package all our works including code and enviroment in one docker image.
 Thanks to Containerization, you can use our tools without many setup steps. Just follow the instruction below :
 ```
