@@ -58,10 +58,13 @@ TBD , Chun-Hung
 <br>
 We use a tool called Docker, which can package all our works including code and enviroment in one docker image.
 Thanks to Containerization, you can use our tools without many setup steps. Just follow the instruction below :
+
 ```
 docker pull johnbamboobilly/ragan
 ```
+
 https://hub.docker.com/r/johnbamboobilly/ragan/ is our repository on dockerhub
+
 ```
 docker image ls
 ```
@@ -69,6 +72,7 @@ check the <IMAGE ID> in the list, and copy <IMAGE ID> just pulled down
 ```
 docker run <IMAGE ID>
 ```
+
 replace <IMAGE ID> with the id you saw on the list
 
 #### Instructions
