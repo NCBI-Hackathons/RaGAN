@@ -18,20 +18,63 @@ def sample_data(n=10000, scale=100):
         data.append([x[i], yi])
     return np.array(data)
 
-def generator(Z, hsize=[16,16]):
+def _generator(Z, hsize=[16,16]):
+    # It should generate an image of size same as actual image
     with tf.variable_scope("GAN/Generator", reuse=False):
         h1 = tf.layers.dense(Z,hsize[0], activation=tf.nn.leaky_relu)
         h2 = tf.layers.dense(h1,hsize[1], activation=tf.nn.leaky_relu)
         out = tf.layers.dense(h2,2)
     return out
 
-def discriminator(X, hsize=[16,16], reuse=False):
+def _discriminator(X, hsize=[16,16], reuse=False):
     with tf.variable_scope("GAN/Discriminator", reuse=reuse):
         h1 = tf.layers.dense(X, hsize[0],activation=tf.nn.leaky_relu)
         h2 = tf.layers.dense(h1,hsize[1],activation=tf.nn.leaky_relu)
         h3 = tf.layers.dense(h2,2)
         out = tf.layers.dense(h3,1)
     return out, h3
+
+image_dim = 784 #28*28
+gen_hidden_dim = 256
+disc_hidden_dim = 256
+noise_dim = 100
+
+def glorot_init(shape):
+    return tf.random_normal(shape=shape, stddev=1./tf.sqrt(shape[0]/2.))
+
+def generator(Z):
+    # Input : array of size 100
+    # It should generate an image of size same as actual image
+    with tf.variable_scope("GAN/Generator", reuse=False):
+        hidden_layer =tf.matmul(Z,tf.Variable(glorot_init([noise_dim, gen_hidden_dim])))
+        hidden_layer = tf.add(hidden_layer, tf.Variable(tf.zeros([gen_hidden_dim])) )
+        hidden_layer = tf.nn.relu(hidden_layer)
+
+        out_layer = tf.matmul(hidden_layer, 
+            tf.Variable(glorot_init([gen_hidden_dim, image_dim])))
+        out_layer = tf.add(out_layer, tf.Variable(tf.zeros([image_dim])) )
+        out_layer = tf.nn.sigmoid(out_layer)
+    return out_layer
+
+def discriminator(X, hsize=[16,16], reuse=False):
+    with tf.variable_scope("GAN/Discriminator", reuse=reuse):
+        #h1 = tf.layers.dense(X, hsize[0],activation=tf.nn.leaky_relu)
+        #h2 = tf.layers.dense(h1,hsize[1],activation=tf.nn.leaky_relu)
+        #h3 = tf.layers.dense(h2,2)
+        #out = tf.layers.dense(h3,1)
+        hidden_layer=tf.matmul(X,tf.Variable(glorot_init([image_dim, disc_hidden_dim])))
+        hidden_layer = tf.add(hidden_layer, tf.Variable(tf.zeros([disc_hidden_dim])) )
+        hidden_layer = tf.nn.relu(hidden_layer)
+
+        hidden_layer2 = tf.matmul(hidden_layer,tf.Variable(glorot_init([disc_hidden_dim, 2])))
+        hidden_layer2 = tf.add(hidden_layer2, tf.Variable(tf.zeros([2])) )
+        hidden_layer2 = tf.nn.relu(hidden_layer2)
+
+        out_layer = tf.matmul(hidden_layer2, 
+            tf.Variable(glorot_init([2, 1])))
+        out_layer = tf.add(out_layer, tf.Variable(tf.zeros([1])) )
+        out_layer = tf.nn.sigmoid(out_layer)
+    return out_layer, hidden_layer2
 
 def load_data(directory_path):
     print(len(os.listdir(directory_path)))
@@ -51,8 +94,8 @@ def load_data(directory_path):
 def main():
     print("Hello World from RaGAN")
 
-    X = tf.placeholder(tf.float32, [None,2])
-    Z = tf.placeholder(tf.float32, [None,2])
+    Z = tf.placeholder(tf.float32, [None,noise_dim])
+    X = tf.placeholder(tf.float32, [None,image_dim])
 
     G_sample = generator(Z )
     r_logits, r_rep = discriminator(X)
@@ -95,7 +138,13 @@ def main():
         X_batch = load_data("data/simages28/Hernia"); 
         print("shape of X_batch : ", X_batch.shape)
         print(np.size(X_batch))
-        exit();
+
+        X_batch = np.reshape(X_batch, (227, 28*28))
+        print("shape of X_batch : ", X_batch.shape)
+        print(np.size(X_batch))
+        #exit();
+
+        Z_batch = glorot_init([batch_size, noise_dim ]); 
 
         for _ in range(nd_steps):
             _ ,dloss = sess.run([disc_step, disc_loss], 
