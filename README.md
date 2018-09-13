@@ -33,16 +33,40 @@ Finally we containerized the workflow such that users are freed from tedious sof
 GAN network architecture, figures, etc.
 
 1. Python ‘regan’ library
+We implemented a cookiecutter-template based development pipeline for the project. Users can download the project from github and use the following command 
+```
+python setup.py build
+python setup.py install
+```
 
-2. Docker version 
-We use a tool called Docker, which package all our work including code and enviroment in one docker image.
+The library will be installed in the "site-packages" directory of the python installation.
+To use the library, users must just use 
+
+```
+import ragan
+```
+in their python script.
+
+We are also making it conda installable project. To install the project, users will have to just use
+```
+conda install ragan -c ragan
+```
+to install the project. 
+
+2. Docker <br>
+We use a tool called Docker, which can package all our works including code and enviroment in one docker image.
 Thanks to Containerization, you can use our tools without many setup steps. Just follow the instruction below :
-1. docker pull johnbamboobilly/ragan
-https://hub.docker.com/r/johnbamboobilly/ragan/
-our repository on dockerhub
-2. docker image ls
-check the IMAGE ID in the list, and copy it
-3. docker run <IMAGE ID>
+```
+docker pull johnbamboobilly/ragan
+```
+https://hub.docker.com/r/johnbamboobilly/ragan/ is our repository on dockerhub
+```
+docker image ls
+```
+check the <IMAGE ID> in the list, and copy <IMAGE ID> just pulled down
+```
+docker run <IMAGE ID>
+```
 replace <IMAGE ID> with the id you saw on the list
 
 #### Instructions
@@ -51,10 +75,20 @@ replace <IMAGE ID> with the id you saw on the list
 
 * Instructions to use the docker version (the python library warped in the docker container for easier usage, for example, the container has all necessary libraries so users don’t have to setup environments on their own computers (they only need a GPU and video card driver)
 
+#### Use cases:
+
+<img src="mnist_2500.png" width="400" height="400" />
+Data source: CXR8
+
 #### Long Term Goals:
 
+* Explore alternatives network architectures for performance enhancement
+* 3D capacity
+* Build more use cases
 
-This repository reflects our efforts at the NCBI Hackathon (Bethesda, MD) 10-12 Sep, 2018. 
+This repository reflects our efforts at the NCBI Hackathon (Bethesda, MD) Sept 10-12, 2018. 
+
+
 ##### Team members:
 * Xinlian Liu, FNLCR
 * Yanling Liu, FNLCR
