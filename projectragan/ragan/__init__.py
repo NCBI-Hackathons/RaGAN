@@ -2,7 +2,7 @@ import tensorflow as tf
 import os
 import numpy as np
 from scipy.ndimage import imread
-
+from scipy.misc import imsave
 
 def sample_Z(m,n):
     return np.random.uniform(-1., 1., size=[m,n])
@@ -128,23 +128,18 @@ def main():
     tf.global_variables_initializer().run(session=sess)
 
     # Training the network
-    batch_size=256
+    batch_size=227
     nd_steps = 10
     ng_steps = 10
-    for i in range(10001):
+    for i in range(10):
         # Reading the data
-        #X_batch = sample_data(n=batch_size);
-        #Z_batch = sample_Z(batch_size, 2);
-        X_batch = load_data("data/simages28/Hernia"); 
-        print("shape of X_batch : ", X_batch.shape)
-        print(np.size(X_batch))
+        X_batch = load_data("data/Hernia"); 
 
         X_batch = np.reshape(X_batch, (227, 28*28))
-        print("shape of X_batch : ", X_batch.shape)
-        print(np.size(X_batch))
-        #exit();
 
         Z_batch = glorot_init([batch_size, noise_dim ]); 
+
+        Z_batch = Z_batch.eval(session=sess)
 
         for _ in range(nd_steps):
             _ ,dloss = sess.run([disc_step, disc_loss], 
@@ -159,8 +154,13 @@ def main():
 
         rrep_gstep, grep_gstep  = sess.run([r_rep, g_rep], 
             feed_dict={X:X_batch, Z:Z_batch})
-
         print("Iteration: %d\t Discriminator loss: %.4f\t Generator loss: %.4f"%(i, dloss, gloss))
 
+    Z_test = glorot_init([1, noise_dim])
+    Z_test = Z_test.eval(session = sess) #glorot_init([1, noise_dim])
+    #print(Z_test) #image_test = generator(Z)
+    #print(sess.run(G_sample, feed_dict={Z:Z_test}) )
+    gen_out = sess.run(G_sample, feed_dict={Z:Z_test}) 
+    #print(np.reshape(gen_out, []))
 
 main();
