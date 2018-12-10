@@ -50,7 +50,20 @@ def generator(Z):
         hidden_layer = tf.add(hidden_layer, tf.Variable(tf.zeros([gen_hidden_dim])) )
         hidden_layer = tf.nn.relu(hidden_layer)
 
-        out_layer = tf.matmul(hidden_layer, 
+
+        hidden_layer2 = tf.matmul(hidden_layer,tf.Variable(glorot_init([gen_hidden_dim, gen_hidden_dim])))
+        hidden_layer2 = tf.add(hidden_layer2, tf.Variable(tf.zeros([gen_hidden_dim])) )
+        hidden_layer2 = tf.nn.relu(hidden_layer2)
+
+        hidden_layer3 = tf.matmul(hidden_layer2,tf.Variable(glorot_init([gen_hidden_dim, gen_hidden_dim])))
+        hidden_layer3 = tf.add(hidden_layer3, tf.Variable(tf.zeros([gen_hidden_dim])) )
+        hidden_layer3 = tf.nn.relu(hidden_layer3)
+
+        hidden_layer4 = tf.matmul(hidden_layer3,tf.Variable(glorot_init([gen_hidden_dim, gen_hidden_dim])))
+        hidden_layer4 = tf.add(hidden_layer4, tf.Variable(tf.zeros([gen_hidden_dim])) )
+        hidden_layer4 = tf.nn.relu(hidden_layer4)
+
+        out_layer = tf.matmul(hidden_layer4, 
             tf.Variable(glorot_init([gen_hidden_dim, image_dim])))
         out_layer = tf.add(out_layer, tf.Variable(tf.zeros([image_dim])) )
         out_layer = tf.nn.sigmoid(out_layer)
@@ -66,11 +79,15 @@ def discriminator(X, hsize=[16,16], reuse=False):
         hidden_layer = tf.add(hidden_layer, tf.Variable(tf.zeros([disc_hidden_dim])) )
         hidden_layer = tf.nn.relu(hidden_layer)
 
-        hidden_layer2 = tf.matmul(hidden_layer,tf.Variable(glorot_init([disc_hidden_dim, 2])))
-        hidden_layer2 = tf.add(hidden_layer2, tf.Variable(tf.zeros([2])) )
+        hidden_layer2 = tf.matmul(hidden_layer,tf.Variable(glorot_init([disc_hidden_dim, disc_hidden_dim])))
+        hidden_layer2 = tf.add(hidden_layer2, tf.Variable(tf.zeros([disc_hidden_dim])) )
         hidden_layer2 = tf.nn.relu(hidden_layer2)
 
-        out_layer = tf.matmul(hidden_layer2, 
+        hidden_layer3 = tf.matmul(hidden_layer2,tf.Variable(glorot_init([disc_hidden_dim, 2])))
+        hidden_layer3 = tf.add(hidden_layer3, tf.Variable(tf.zeros([2])) )
+        hidden_layer3 = tf.nn.relu(hidden_layer3)
+
+        out_layer = tf.matmul(hidden_layer3, 
             tf.Variable(glorot_init([2, 1])))
         out_layer = tf.add(out_layer, tf.Variable(tf.zeros([1])) )
         out_layer = tf.nn.sigmoid(out_layer)
@@ -124,14 +141,15 @@ def main():
         var_list=disc_vars) # G train step
 
     #Session
-    sess = tf.Session()
+    config = tf.ConfigProto(device_count = {'GPU': 2})
+    sess = tf.Session(config = config)
     tf.global_variables_initializer().run(session=sess)
 
     # Training the network
     batch_size=227
     nd_steps = 10
     ng_steps = 10
-    for i in range(10):
+    for i in range(1000):
         # Reading the data
         X_batch = load_data("data/Hernia"); 
 
@@ -161,6 +179,7 @@ def main():
     #print(Z_test) #image_test = generator(Z)
     #print(sess.run(G_sample, feed_dict={Z:Z_test}) )
     gen_out = sess.run(G_sample, feed_dict={Z:Z_test}) 
-    #print(np.reshape(gen_out, []))
+    imgnp = np.reshape(gen_out, (28, 28))
+    imsave('img.png', imgnp) 
 
 main();
