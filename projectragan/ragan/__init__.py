@@ -131,7 +131,7 @@ def main():
     batch_size=227
     nd_steps = 10
     ng_steps = 10
-    for i in range(1001):
+    for i in range(10):
         # Reading the data
         X_batch = load_data("data/Hernia"); 
 
@@ -156,5 +156,11 @@ def main():
             feed_dict={X:X_batch, Z:Z_batch})
         print("Iteration: %d\t Discriminator loss: %.4f\t Generator loss: %.4f"%(i, dloss, gloss))
 
+    Z_test = glorot_init([1, noise_dim])
+    Z_test = Z_test.eval(session = sess) #glorot_init([1, noise_dim])
+    #print(Z_test) #image_test = generator(Z)
+    #print(sess.run(G_sample, feed_dict={Z:Z_test}) )
+    gen_out = sess.run(G_sample, feed_dict={Z:Z_test}) 
+    #print(np.reshape(gen_out, []))
 
 main();
